@@ -1,6 +1,6 @@
 # Shuriken
 
-This is a Naruto-themed video game.
+This is a Naruto-themed video game I built.
 Use <- and -> to move Naruto to avoid the dropping Shurikens. 
 Enjoy! 
 
