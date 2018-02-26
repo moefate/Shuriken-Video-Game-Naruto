@@ -54,7 +54,7 @@ def die():
     messageDisplay("Ouch!")
 
 def hit(weaponImg, x, y, wx, wy):
-    # Check if a Shuriken touches Naruto
+    # Check if a Shuriken hits Naruto
     narutoSurf = narutoImg.convert_alpha()
     weaponSurf = weaponImg.convert_alpha()
     naruto_mask = pygame.mask.from_surface(narutoSurf)
@@ -65,6 +65,11 @@ def hit(weaponImg, x, y, wx, wy):
 def placeObject(image, x, y):
     gameDisplay.blit(image,(x,y))
 
+def displayScore(score):
+    font = pygame.font.SysFont(None, 30)
+    text = font.render("SCORE: "+str(score), True, WHITE)
+    gameDisplay.blit(text,(0,0))
+    
 def gameLoop():
 
     # Set positions for Naruto
@@ -83,7 +88,7 @@ def gameLoop():
     wspeed = 7
     wcount = 1
 
-    dodged = 0
+    score = 0
 
     weapon = weaponList[random.randrange(0, 4)]
     gameExit = False
@@ -116,17 +121,16 @@ def gameLoop():
             placeObject(narutoImg, x, y)
 
 
-
         placeObject(weapon, wx, wy)
-
+        displayScore(score)
         wy += wspeed
-
+        
 
         if wy > DISPLAY_HEIGHT:
             wy = 0 - wheight
             wx = random.randrange(0, DISPLAY_WIDTH - wwidth)
-            dodged += 1
-            if wspeed < 15:
+            score += 1
+            if wspeed < 20:
                 wspeed += 0.5
             n = random.randrange(0, 4)
             weapon = weaponList[n]
