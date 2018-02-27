@@ -1,7 +1,7 @@
 # Shuriken
 
 This is a Naruto-themed video game I built using Pygame 1.9.2 with Python 3.6.    
-For free pygame tutorial, I found this super helpful: https://pythonprogramming.net
+For free pygame tutorial, I found this super helpful: https://pythonprogramming.net    
 Use <- and -> to move Naruto to avoid the dropping Shurikens. 
 
 Enjoy! 
