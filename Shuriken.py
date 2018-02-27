@@ -6,7 +6,12 @@ from pygame.locals import *
 # Define some colors
 BLACK = (  0,   0,   0)
 WHITE = (255, 255, 255)
-RED = (255, 0, 0)
+
+RED = (255,0,0)
+GREEN = (0,255,0)
+
+BRIGHT_RED = (200,0,0)
+BRIGHT_GREEN = (0,200,0)
 
 # Define some game constants
 DISPLAY_WIDTH = 800
@@ -35,13 +40,13 @@ pygame.mixer.music.play(-1)
 clock = pygame.time.Clock()
 
 
-def textObjects(text, font):
-    textSurface = font.render(text, True, RED)
+def textObjects(text, font, color):
+    textSurface = font.render(text, True, color)
     return textSurface, textSurface.get_rect()
 
-def messageDisplay(text):
+def messageDisplay(text, color):
     largeText = pygame.font.Font('freesansbold.ttf', 115)
-    TextSurf, TextRect = textObjects(text, largeText)
+    TextSurf, TextRect = textObjects(text, largeText,color)
     TextRect.center = ((DISPLAY_WIDTH / 2), (DISPLAY_HEIGHT / 2))
     gameDisplay.blit(TextSurf, TextRect)
 
@@ -51,7 +56,7 @@ def messageDisplay(text):
     gameLoop()
 
 def die():
-    messageDisplay("Ouch!")
+    messageDisplay("Ouch!", RED)
 
 def hit(weaponImg, x, y, wx, wy):
     # Check if a Shuriken hits Naruto
@@ -62,6 +67,49 @@ def hit(weaponImg, x, y, wx, wy):
     offset = (int(wx - x), int(wy - y))
     return naruto_mask.overlap(weapon_mask, offset)
 
+def button(msg,x,y,w,h,ic,ac,action=None):
+    mouse = pygame.mouse.get_pos()
+    click = pygame.mouse.get_pressed()
+    if x+w > mouse[0] > x and y+h > mouse[1] > y:
+        pygame.draw.rect(gameDisplay, ac,(x,y,w,h))
+
+        if click[0] == 1 and action != None:
+            action()
+    else:
+        pygame.draw.rect(gameDisplay, ic,(x,y,w,h))
+
+    smallText = pygame.font.SysFont("comicsansms",20)
+    textSurf, textRect = textObjects(msg, smallText, BLACK)
+    textRect.center = ( (x+(w/2)), (y+(h/2)) )
+    gameDisplay.blit(textSurf, textRect)
+
+
+def quitGame():
+    pygame.quit()
+    quit()
+
+def gameIntro():
+    intro = True
+
+    while intro:
+        for event in pygame.event.get():
+            #print(event)
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+                
+        gameDisplay.fill(WHITE)
+        largeText = pygame.font.SysFont("comicsansms",115)
+        TextSurf, TextRect = textObjects("Shuriken", largeText, BLACK)
+        TextRect.center = ((DISPLAY_WIDTH/2),(DISPLAY_HEIGHT/2))
+        gameDisplay.blit(TextSurf, TextRect)
+
+        button("GO!",150,500,100,50,GREEN,BRIGHT_GREEN,gameLoop)
+        button("Quit",550,500,100,50,RED,BRIGHT_RED,quitGame)
+
+        pygame.display.update()
+        clock.tick(15)
+    
 def placeObject(image, x, y):
     gameDisplay.blit(image,(x,y))
 
@@ -69,7 +117,7 @@ def displayScore(score):
     font = pygame.font.SysFont(None, 30)
     text = font.render("SCORE: "+str(score), True, WHITE)
     gameDisplay.blit(text,(0,0))
-    
+
 def gameLoop():
 
     # Set positions for Naruto
@@ -130,8 +178,8 @@ def gameLoop():
             wy = 0 - wheight
             wx = random.randrange(0, DISPLAY_WIDTH - wwidth)
             score += 1
-            if wspeed < 20:
-                wspeed += 0.5
+            if wspeed < 30:
+                wspeed += 1
             n = random.randrange(0, 4)
             weapon = weaponList[n]
 
@@ -143,7 +191,7 @@ def gameLoop():
         clock.tick(120)
 
 
-
+gameIntro()
 gameLoop()
 pygame.quit()
 quit()
